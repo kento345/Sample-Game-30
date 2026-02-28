@@ -4,33 +4,42 @@ using UnityEngine.Rendering.Universal;
 
 public class ChargeSpike : MonoBehaviour
 {
-    //[SerializeField] private Renderer targetRender;
     [SerializeField] private DecalProjector targetRender;
-    [SerializeField] private float chargeSpeed = 1.5f;
+    [SerializeField] private float MaxChargeTime = 1.5f;
+    private float charge;
 
     private Material mat;
-    private float charge;
+    private AtackController ac;
+    private PlayerStateManager stateManager;
+
+    private void OnEnable()
+    {
+        mat = new Material(targetRender.material);
+        targetRender.material = mat;
+    }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        mat = targetRender.material;
+        ac = GetComponent<AtackController>();
+        stateManager = GetComponent<PlayerStateManager>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKey(KeyCode.Space))
+        if (stateManager.ActionState == ActionState.Charge)
         {
-            charge += Time.deltaTime * chargeSpeed;
+            charge += Time.deltaTime / MaxChargeTime;
         }
         else
         {
-            charge -= Time.deltaTime * chargeSpeed;
+            charge -= Time.deltaTime * 2f;
         }
 
         charge = Mathf.Clamp01(charge);
 
+        ac.SetCharge(charge * ac.chargeMax);
         mat.SetFloat("_Charge", charge);
     }
 }

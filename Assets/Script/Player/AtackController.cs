@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Runtime.CompilerServices;
+using Unity.VisualScripting;
 using UnityEditor;
 using UnityEditor.ShaderGraph.Internal;
 using UnityEditorInternal;
@@ -17,8 +18,6 @@ public class AtackController : MonoBehaviour
     private float t = 0f;
     public float chargeMax = 5.0f;
     private bool isMax = false;
-  /*  private bool isShot = false;
-    private bool isStart =false;*/
     private bool isRigid = false;
 
     [Header("ノックバック,無敵設定")]
@@ -34,6 +33,10 @@ public class AtackController : MonoBehaviour
     Rigidbody rb;
     PlayerStateManager stateManager;
    
+    public void SetCharge(float value)
+    {
+        t = value;
+    }
 
     private void Start()
     {
@@ -45,19 +48,11 @@ public class AtackController : MonoBehaviour
     {
         if (stateManager.ActionState == ActionState.Charge)
         {
-            if (t < chargeMax)
-            {
-                t += Time.deltaTime;
-            }
             if (t > chargeMax)
             {
                 isMax = true;
             }
         }
-/*        else if (stateManager.ActionState == ActionState.Attack)
-        {
-            t = 0f;
-        }*/
     }
 
     public void Shot(int x)
@@ -74,14 +69,15 @@ public class AtackController : MonoBehaviour
         if (x == 2)
         {
             if(lisCooldown) { return; }
-            if (isRigid) { return; }
-            //チャージを止め攻撃,ステート変更
+/*            if (isRigid) { return; }
+*/            //チャージを止め攻撃,ステート変更
             stateManager.SetActionState(ActionState.Attack);
             t = 0f;
             //? = true , : = false
             curentknockbackForce = isMax ? StrongKnockbackForce : WeakKnockbackForce;
 
             rb.AddForce(transform.forward * curentForce, ForceMode.Impulse);
+           
             Invoke("EndAttack", duration);
         }  
     }
@@ -101,6 +97,13 @@ public class AtackController : MonoBehaviour
 
         StartCoroutine(CooldownCount());
     }
+
+/*    IEnumerator AttackRoutine()
+    {
+        stateManager.SetActionState(ActionState.Attack);
+        yield return new WaitForSeconds(duration);
+        stateManager.SetActionState(ActionState.None);
+    }*/
 
     IEnumerator CooldownCount()
     {

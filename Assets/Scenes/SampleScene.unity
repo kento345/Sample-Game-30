@@ -823,7 +823,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   curentForce: 15
-  lastTime: 0
   chargeMax: 5
   WeakKnockbackForce: 15
   StrongKnockbackForce: 30
@@ -849,13 +848,13 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1439293802}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 49b30c4453cb9fb45bd1da19a32d0e1e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  targetRender: {fileID: 0}
-  chargeSpeed: 1.5
+  targetRender: {fileID: 1740635830}
+  MaxChargeTime: 1.5
 --- !u!1 &1698416642
 GameObject:
   m_ObjectHideFlags: 0
@@ -973,6 +972,18 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1439293806}
     m_Modifications:
+    - target: {fileID: 1058778541009477915, guid: 0d5e6aa26ac01ed4cafa7240336934fa, type: 3}
+      propertyPath: m_EndAngleFade
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1058778541009477915, guid: 0d5e6aa26ac01ed4cafa7240336934fa, type: 3}
+      propertyPath: m_StartAngleFade
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5227224724640258838, guid: 0d5e6aa26ac01ed4cafa7240336934fa, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.5
+      objectReference: {fileID: 0}
     - target: {fileID: 6440060606679572867, guid: 0d5e6aa26ac01ed4cafa7240336934fa, type: 3}
       propertyPath: m_Name
       value: Decal
@@ -1017,6 +1028,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8929118840954941172, guid: 0d5e6aa26ac01ed4cafa7240336934fa, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.5
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1027,6 +1042,17 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 7510191146229657240, guid: 0d5e6aa26ac01ed4cafa7240336934fa, type: 3}
   m_PrefabInstance: {fileID: 1740635828}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1740635830 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8608967436243529705, guid: 0d5e6aa26ac01ed4cafa7240336934fa, type: 3}
+  m_PrefabInstance: {fileID: 1740635828}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0777d029ed3dffa4692f417d4aba19ca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1969406293
 GameObject:
   m_ObjectHideFlags: 0

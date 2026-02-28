@@ -12,6 +12,7 @@ public class Reception : MonoBehaviour
     Collider col;
 
     [SerializeField] private float StunInvincibleTime = 1.0f; //無敵時間
+    bool isKonckback = false;
     private bool isHit = false;
     Rigidbody rb;
     //Animator animator;
@@ -29,19 +30,19 @@ public class Reception : MonoBehaviour
 
     private void Update()
     {
-        if (stateManager.ActionState == ActionState.Knockback)
+        if (isKonckback)
         {
             knockbackCounter -= Time.deltaTime;
             if (knockbackCounter <= 0)
             {
-                stateManager.SetActionState(ActionState.None);
+                //stateManager.SetActionState(ActionState.None);
                 rb.linearVelocity = Vector3.zero;
             }
         }
     }
     private void FixedUpdate()
     {
-        if(stateManager.ActionState == ActionState.Knockback)
+        if(isKonckback)
         {
             rb.linearVelocity = knockbackDir;
         }
@@ -49,7 +50,7 @@ public class Reception : MonoBehaviour
 
     public void KnockBack(Vector3 pos,float force)
     {
-        stateManager.SetActionState(ActionState.Knockback);
+        isKonckback = true;
         knockbackCounter = knockbackTime;
         Debug.Log("ノックバック");
         knockbackDir = pos.normalized * force;

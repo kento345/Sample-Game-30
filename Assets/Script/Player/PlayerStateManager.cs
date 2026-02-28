@@ -7,7 +7,7 @@ public enum MoveState
 }
 public enum ActionState
 {
-    None,Charge, Attack, Hit, Knockback
+    None,Charge, Attack/*, Hit, Knockback*/
 }
 //ステート管理クラス
 public class PlayerStateManager : MonoBehaviour

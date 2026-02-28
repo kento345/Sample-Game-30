@@ -43,24 +43,22 @@ public class MoveController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        stateManager.UpdateMoveState(inputVer);
+        //stateManager.UpdateMoveState(inputVer);
         Move();
     }
 
     public void Move()
     {
-        if (stateManager.MoveState == MoveState.Idle) { return; }
-       
+        curentSpeed = Speed;
+        curentRotSpeed = rotSpeed;
+
         if (stateManager.ActionState == ActionState.Charge)
         {
             curentSpeed = Speed2;
             curentRotSpeed = rotSpeed2;
         }
-        else if(stateManager.ActionState == ActionState.Attack || stateManager.ActionState == ActionState.None)
-        {
-            curentSpeed = Speed;
-            curentRotSpeed = rotSpeed;
-        }
+
+        if (stateManager.MoveState == MoveState.Idle) { return; }
 
         if (stateManager.ActionState != ActionState.Attack)
         {
