@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Runtime.CompilerServices;
 using UnityEditor;
 using UnityEditor.ShaderGraph.Internal;
@@ -10,7 +11,8 @@ public class AtackController : MonoBehaviour
     [SerializeField] private float curentForce;
     private float duration = 0.5f;
     private float cooldown = 1.0f; //攻撃クールダウン
-    public float lastTime = 0f;
+    private bool lisCooldown = false;
+    //public float lastTime = 0f;
 
     private float t = 0f;
     public float chargeMax = 5.0f;
@@ -52,59 +54,59 @@ public class AtackController : MonoBehaviour
                 isMax = true;
             }
         }
-        else if (stateManager.ActionState == ActionState.Attack)
+/*        else if (stateManager.ActionState == ActionState.Attack)
         {
             t = 0f;
-        }
+        }*/
     }
 
     public void Shot(int x)
     {
         if (x == 1)
         {
-            if(stateManager.ActionState == ActionState.Charge || stateManager.ActionState == ActionState.Attack) {return; }
+            if(lisCooldown) { return; }
+            if (stateManager.ActionState != ActionState.None) {return; }
             isRigid = false;
 
-            if (stateManager.ActionState != ActionState.Attack && Time.time > lastTime + cooldown)
-            {
-                //チャージ開始,ステート変更
-                stateManager.SetActionState(ActionState.Charge);
-            }
+            //チャージ開始,ステート変更
+            stateManager.SetActionState(ActionState.Charge);
         }
         if (x == 2)
         {
-            if (stateManager.ActionState != ActionState.Attack && Time.time > lastTime + cooldown)
-            {
-                if (isRigid) { return; }
-                //チャージを止め攻撃,ステート変更
-                stateManager.SetActionState(ActionState.Attack);
+            if(lisCooldown) { return; }
+            if (isRigid) { return; }
+            //チャージを止め攻撃,ステート変更
+            stateManager.SetActionState(ActionState.Attack);
+            t = 0f;
+            //? = true , : = false
+            curentknockbackForce = isMax ? StrongKnockbackForce : WeakKnockbackForce;
 
-                lastTime = Time.time;
-
-                if (isMax)
-                {
-                    curentknockbackForce = StrongKnockbackForce;
-                }
-                else
-                {
-                    curentknockbackForce = WeakKnockbackForce;
-                }
-                rb.AddForce(transform.forward * curentForce, ForceMode.Impulse);
-                Invoke("EndAttack", duration);
-            }
+            rb.AddForce(transform.forward * curentForce, ForceMode.Impulse);
+            Invoke("EndAttack", duration);
         }  
     }
 
     void EndAttack()
     {
         rb.linearVelocity = Vector3.zero;
+        //ステートをNoneに
+        stateManager.SetActionState(ActionState.None);
+
         if (isMax)
         {
             isRigid = true;
         }
-        //ステートをNoneに
-        stateManager.SetActionState(ActionState.None);
+    
         isMax = false;
+
+        StartCoroutine(CooldownCount());
+    }
+
+    IEnumerator CooldownCount()
+    {
+        lisCooldown = true;
+        yield return new WaitForSeconds(cooldown);
+        lisCooldown = false;
     }
 
     private void OnTriggerStay(Collider other)
