@@ -36,6 +36,7 @@ public class Reception : MonoBehaviour
             if (knockbackCounter <= 0)
             {
                 //stateManager.SetActionState(ActionState.None);
+                isKonckback = false;
                 rb.linearVelocity = Vector3.zero;
             }
         }

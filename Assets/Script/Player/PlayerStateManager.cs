@@ -26,4 +26,9 @@ public class PlayerStateManager : MonoBehaviour
         //ステートの変更
         ActionState = state;
     }
+
+   /* private void Update()
+    {
+        Debug.Log($"MoveState: {MoveState}, ActionState: {ActionState}");
+    }*/
 }

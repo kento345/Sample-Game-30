@@ -16,15 +16,18 @@ public class AtackController : MonoBehaviour
     //public float lastTime = 0f;
 
     private float t = 0f;
-    public float chargeMax = 5.0f;
+    //public float chargeMax = 5.0f;
     private bool isMax = false;
-    private bool isRigid = false;
+
+    //-----硬直-----
+    [SerializeField] private float StrongRecoveryTime = 1.0f; //硬直時間
+    private float curentRecoveryTime;
+    [HideInInspector] public bool isRigid = false;
 
     [Header("ノックバック,無敵設定")]
     [SerializeField] private float WeakKnockbackForce = 2.5f; //弱ノックバック
     [SerializeField] private float StrongKnockbackForce = 5.0f;//強ノックバック
     private float curentknockbackForce = 0f;//現在のノックバック力
-
 
     [Header("当たり判定設定")]
     [SerializeField] private SphereCollider searchArea;
@@ -40,6 +43,8 @@ public class AtackController : MonoBehaviour
 
     private void Start()
     {
+        curentRecoveryTime = StrongRecoveryTime;
+
         rb = GetComponent<Rigidbody>();
         stateManager = GetComponent<PlayerStateManager>();
     }
@@ -48,9 +53,21 @@ public class AtackController : MonoBehaviour
     {
         if (stateManager.ActionState == ActionState.Charge)
         {
-            if (t > chargeMax)
+            if (t > 1)
             {
                 isMax = true;
+            }
+        }
+        if (isRigid)
+        {
+            if(curentRecoveryTime > 0f)
+            {
+                curentRecoveryTime -= Time.deltaTime;
+            }
+            if(curentRecoveryTime <= 0f)
+            {
+                isRigid = false;
+                curentRecoveryTime = StrongRecoveryTime;
             }
         }
     }
@@ -60,7 +77,7 @@ public class AtackController : MonoBehaviour
         if (x == 1)
         {
             if(lisCooldown) { return; }
-            if (stateManager.ActionState != ActionState.None) {return; }
+            if (stateManager.ActionState == ActionState.Charge) {return; }
             isRigid = false;
 
             //チャージ開始,ステート変更
@@ -69,16 +86,21 @@ public class AtackController : MonoBehaviour
         if (x == 2)
         {
             if(lisCooldown) { return; }
-/*            if (isRigid) { return; }
-*/            //チャージを止め攻撃,ステート変更
-            stateManager.SetActionState(ActionState.Attack);
-            t = 0f;
-            //? = true , : = false
-            curentknockbackForce = isMax ? StrongKnockbackForce : WeakKnockbackForce;
+            if (isRigid) { return; }
 
-            rb.AddForce(transform.forward * curentForce, ForceMode.Impulse);
-           
-            Invoke("EndAttack", duration);
+            if (stateManager.ActionState == ActionState.Charge)
+            {
+                //チャージを止め攻撃,ステート変更
+                stateManager.SetActionState(ActionState.Attack);
+
+                //? = true , : = false
+                curentknockbackForce = isMax ? StrongKnockbackForce : WeakKnockbackForce;
+
+                rb.AddForce(transform.forward * curentForce, ForceMode.Impulse);
+
+                Invoke("EndAttack", duration);
+            } 
+          
         }  
     }
 
@@ -90,20 +112,15 @@ public class AtackController : MonoBehaviour
 
         if (isMax)
         {
+            Debug .Log("強攻撃");
             isRigid = true;
         }
     
         isMax = false;
+        t = 0f;
 
         StartCoroutine(CooldownCount());
     }
-
-/*    IEnumerator AttackRoutine()
-    {
-        stateManager.SetActionState(ActionState.Attack);
-        yield return new WaitForSeconds(duration);
-        stateManager.SetActionState(ActionState.None);
-    }*/
 
     IEnumerator CooldownCount()
     {

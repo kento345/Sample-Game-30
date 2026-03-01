@@ -34,12 +34,13 @@ public class ChargeSpike : MonoBehaviour
         }
         else
         {
-            charge -= Time.deltaTime * 2f;
+            //charge -= Time.deltaTime * 2f;
+            charge = 0f;
         }
 
         charge = Mathf.Clamp01(charge);
 
-        ac.SetCharge(charge * ac.chargeMax);
+        ac.SetCharge(charge);
         mat.SetFloat("_Charge", charge);
     }
 }

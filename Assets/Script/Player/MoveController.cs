@@ -21,6 +21,7 @@ public class MoveController : MonoBehaviour
 
     //-----ScriptéQè∆-----
     private PlayerStateManager stateManager;
+    private AtackController ac;
 
     private void Awake()
     {
@@ -32,6 +33,7 @@ public class MoveController : MonoBehaviour
     private void Start()
     {
         stateManager = GetComponent<PlayerStateManager>();
+        ac = GetComponent<AtackController>();
         rb = GetComponent<Rigidbody>();
     }
 
@@ -49,6 +51,8 @@ public class MoveController : MonoBehaviour
 
     public void Move()
     {
+        if (ac.isRigid) { return; }
+
         curentSpeed = Speed;
         curentRotSpeed = rotSpeed;
 
