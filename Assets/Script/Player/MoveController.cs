@@ -52,6 +52,7 @@ public class MoveController : MonoBehaviour
     public void Move()
     {
         if (ac.isRigid) { return; }
+        if(stateManager.State != State.None) { return; }
 
         curentSpeed = Speed;
         curentRotSpeed = rotSpeed;

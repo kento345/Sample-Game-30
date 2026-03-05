@@ -7,7 +7,11 @@ public enum MoveState
 }
 public enum ActionState
 {
-    None,Charge, Attack/*, Hit, Knockback*/
+    None,Charge, Attack
+}
+public enum State
+{
+    None,Knockback,Hit
 }
 //ステート管理クラス
 public class PlayerStateManager : MonoBehaviour
@@ -15,7 +19,8 @@ public class PlayerStateManager : MonoBehaviour
     //ステートのメソッド,代入はこのクラスのみ参照は別クラスでも可
     public MoveState MoveState {get; private set;} = MoveState.Idle;
     public ActionState ActionState {get; private set;} = ActionState.None;
-    
+    public State State {get; private set;} = State.None;
+
     public void UpdateMoveState(Vector2 inputVere)
     {
         //入力がされたらステートを変更(? = true,: = false) 
@@ -26,9 +31,13 @@ public class PlayerStateManager : MonoBehaviour
         //ステートの変更
         ActionState = state;
     }
-
-   /* private void Update()
+    public void SetStart(State state)
     {
-        Debug.Log($"MoveState: {MoveState}, ActionState: {ActionState}");
-    }*/
+        State = state;
+    }
+
+    /* private void Update()
+     {
+         Debug.Log($"MoveState: {MoveState}, ActionState: {ActionState}");
+     }*/
 }

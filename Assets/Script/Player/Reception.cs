@@ -35,8 +35,8 @@ public class Reception : MonoBehaviour
             knockbackCounter -= Time.deltaTime;
             if (knockbackCounter <= 0)
             {
-                //stateManager.SetActionState(ActionState.None);
                 isKonckback = false;
+                stateManager.SetStart(State.None);
                 rb.linearVelocity = Vector3.zero;
             }
         }
@@ -52,6 +52,7 @@ public class Reception : MonoBehaviour
     public void KnockBack(Vector3 pos,float force)
     {
         isKonckback = true;
+        stateManager.SetStart(State.Knockback);
         knockbackCounter = knockbackTime;
         Debug.Log("ノックバック");
         knockbackDir = pos.normalized * force;
@@ -62,6 +63,7 @@ public class Reception : MonoBehaviour
     IEnumerator Hit()
     {
         isHit = true;
+        stateManager.SetStart(State.Hit);
         col.enabled = false;
         rb.useGravity = false;
         yield return new WaitForSeconds(StunInvincibleTime);
