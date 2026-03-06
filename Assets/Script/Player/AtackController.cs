@@ -9,7 +9,7 @@ using UnityEngine;
 
 public class AtackController : MonoBehaviour
 {
-    [SerializeField] private float curentForce;
+    [SerializeField] private float curentForce = 15f;
     private float duration = 0.5f;
     private float cooldown = 1.0f; //攻撃クールダウン
     private bool lisCooldown = false;
@@ -25,8 +25,8 @@ public class AtackController : MonoBehaviour
     [HideInInspector] public bool isRigid = false;
 
     [Header("ノックバック,無敵設定")]
-    [SerializeField] private float WeakKnockbackForce = 2.5f; //弱ノックバック
-    [SerializeField] private float StrongKnockbackForce = 5.0f;//強ノックバック
+    [SerializeField] private float WeakKnockbackForce = 15.0f; //弱ノックバック
+    [SerializeField] private float StrongKnockbackForce = 30.0f;//強ノックバック
     private float curentknockbackForce = 0f;//現在のノックバック力
 
     [Header("当たり判定設定")]
