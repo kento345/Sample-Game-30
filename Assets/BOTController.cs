@@ -1,12 +1,20 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.UIElements;
 
 public class BOTController : MonoBehaviour
 {
-    GameObject target;
-
+   [SerializeField] GameObject target;
     GameObject near = null;
+    float minDist;
+
+    private float attackPrepareTime = 1f;
+    bool preparingAttack = false;
+    float prepareCounter = 0f;
+
+    bool attackRest = false;
+    private float restTime = 3f;
 
     private PlayerStateManager stateManager;
     private MoveController move;
@@ -15,7 +23,8 @@ public class BOTController : MonoBehaviour
 
     Rigidbody rb;
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+
+
     void Start()
     {
         stateManager = GetComponent<PlayerStateManager>();
@@ -29,6 +38,7 @@ public class BOTController : MonoBehaviour
 
     void Update()
     {
+        Debug.Log(stateManager.ActionState);
         //false
         if (!sencer.CheckLayer())
         {
@@ -43,10 +53,18 @@ public class BOTController : MonoBehaviour
             if (Quaternion.Angle(rb.rotation, targetRotation) < 0.5f)
             {
                 rb.rotation = targetRotation;
-                //isRotating = false;
             }
             return;
         }
+        Serch();
+
+        if (!attackRest && near != null && minDist < 10f)
+        {
+            target = near;
+
+            Attack();
+        }
+
         if (target == null)
         {
             CreatePoint();
@@ -54,13 +72,23 @@ public class BOTController : MonoBehaviour
         }
 
         MoVeToPoint();
+
         float dist = Vector3.Distance(transform.position, target.transform.position);
-        if (dist < 1f)
+        if (target.name == "CheckPoint" && dist < 1f)
         {
             Destroy(target);
             CreatePoint();
         }
+        if(!attackRest && target == near && stateManager.ActionState == ActionState.None)
+        {
+            StartCoroutine(RestTime());
+        }
+        if (stateManager.ActionState == ActionState.Attack)
+        {
+            preparingAttack = false;
+        }
     }
+
     void MoVeToPoint()
     {
         Vector3 dir = target.transform.position - transform.position;
@@ -90,15 +118,84 @@ public class BOTController : MonoBehaviour
         CreatePoint();
     }
 
+  /*  void PrepareAttack()
+    {
+        if (target == null) return;
+
+        // 敵の方向を向く
+        Vector3 dir = target.transform.position - transform.position;
+        dir.y = 0;
+        transform.forward = dir.normalized;
+
+        // 移動停止
+        OnMove(Vector2.zero);
+
+        if (!preparingAttack)
+        {
+            preparingAttack = true;
+            prepareCounter = attackPrepareTime;
+        }
+
+        // 溜め時間
+        if (prepareCounter <= 0f)
+        {
+            prepareCounter -= Time.deltaTime;
+        }
+
+        // 溜め終わったらチャージ攻撃開始
+        //atack.BOTAttack(target.transform.position);
+    }*/
+
+    void Attack()
+    {
+        if (target == null) return;
+
+        Vector3 dir = target.transform.position - transform.position;
+        dir.y = 0;
+        transform.forward = dir.normalized;
+        float dist = dir.magnitude;
+        if (!preparingAttack && dist < 6)
+        {
+            preparingAttack = true;
+            prepareCounter = attackPrepareTime;
+            OnMove(Vector2.zero); //止まる
+        }
+        // 溜め時間
+        if (preparingAttack)
+        {
+            prepareCounter -= Time.deltaTime;
+
+            // チャージ開始
+            if (stateManager.ActionState == ActionState.None)
+            {
+                atack.Shot(0);
+            }
+
+            // 溜め完了
+            if (prepareCounter <= 0f)
+            {
+                preparingAttack = false;
+
+                if (stateManager.ActionState == ActionState.Charge)
+                {
+                    atack.Shot(1);
+                }
+            }
+        }
+    }
+
     void Serch()
     {
+        near = null;
         GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
 
-        
-        float minDist = Mathf.Infinity;
 
-        foreach(var player in players)
+        minDist = Mathf.Infinity;
+
+        foreach (var player in players)
         {
+            if (player == gameObject) continue;
+
             float dist = Vector3.Distance(transform.position, player.transform.position);
             if(dist < minDist)
             {
@@ -114,8 +211,14 @@ public class BOTController : MonoBehaviour
         move.SetMoveInput(context);
     }
 
-    void OnAtack(int i)
+    IEnumerator RestTime()
     {
-        atack.Shot(i);
+        attackRest = true;
+
+        target = null;
+        CreatePoint();
+        yield return new WaitForSeconds(restTime);
+
+        attackRest = false;
     }
 }

@@ -28,11 +28,11 @@ public class PlayerInputController : MonoBehaviour
     {
         if (context.performed)
         {
-            atack.Shot(1);
+            atack.Shot(0);
         }
         if (context.canceled)
         {
-            atack.Shot(2);
+            atack.Shot(1);
         }
     }
 }

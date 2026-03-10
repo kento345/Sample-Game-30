@@ -13,10 +13,8 @@ public class AtackController : MonoBehaviour
     private float duration = 0.5f;
     private float cooldown = 1.0f; //攻撃クールダウン
     private bool lisCooldown = false;
-    //public float lastTime = 0f;
 
     private float t = 0f;
-    //public float chargeMax = 5.0f;
     private bool isMax = false;
 
     //-----硬直-----
@@ -71,10 +69,30 @@ public class AtackController : MonoBehaviour
             }
         }
     }
+/*    public void BOTAttack(Vector3 targetPos,int i)
+    {
+        if (stateManager.ActionState != ActionState.None && lisCooldown) return;
+        Vector3 dir = targetPos - transform.position;
+        dir.y = 0;
+
+        transform.forward = dir.normalized;
+         
+        float dist = dir.magnitude;
+
+        if (stateManager.ActionState == ActionState.None)
+        {
+            Shot(i);
+        }
+
+        if (stateManager.ActionState == ActionState.Charge && dist <= 5f)
+        {
+            Shot(i);
+        }
+    }*/
 
     public void Shot(int x)
     {
-        if (x == 1)
+        if (x == 0)
         {
             if(lisCooldown) { return; }
             if (stateManager.ActionState == ActionState.Charge) {return; }
@@ -83,7 +101,7 @@ public class AtackController : MonoBehaviour
             //チャージ開始,ステート変更
             stateManager.SetActionState(ActionState.Charge);
         }
-        if (x == 2)
+        if (x == 1)
         {
             if(lisCooldown) { return; }
             if (isRigid) { return; }
@@ -152,7 +170,6 @@ public class AtackController : MonoBehaviour
                             Reception p = other.gameObject.GetComponent<Reception>();
                             //if (p.isHit) { return; }
                             p.KnockBack(rb.linearVelocity.normalized, curentknockbackForce);
-                            Debug.Log("攻撃Hit");
                             //当たった時点でInvokeをキャンセルしてタックルを止める
                             CancelInvoke("EndAttack");
                             EndAttack();

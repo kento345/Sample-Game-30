@@ -51,6 +51,8 @@ public class Reception : MonoBehaviour
 
     public void KnockBack(Vector3 pos,float force)
     {
+        if (isHit) return;
+
         isKonckback = true;
         stateManager.SetStart(State.Knockback);
         knockbackCounter = knockbackTime;
@@ -64,13 +66,14 @@ public class Reception : MonoBehaviour
     {
         isHit = true;
         stateManager.SetStart(State.Hit);
+
+        yield return new WaitForSeconds(0.05f);
         col.enabled = false;
         rb.useGravity = false;
         yield return new WaitForSeconds(StunInvincibleTime);
 
         rb.useGravity = true;
         col.enabled = true;
-        Debug.Log("ñ≥ìGèIóπ");
-       isHit = false;
+        isHit = false;
     }
 }
