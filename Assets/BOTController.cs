@@ -5,13 +5,19 @@ using UnityEngine.UIElements;
 
 public class BOTController : MonoBehaviour
 {
-   [SerializeField] GameObject target;
+    [SerializeField] private GameObject point;
+    [SerializeField] GameObject pointTarget;
+    [SerializeField] GameObject playerTarget;
     GameObject near = null;
     float minDist;
+
 
     private float attackPrepareTime = 1f;
     bool preparingAttack = false;
     float prepareCounter = 0f;
+
+    Quaternion targetRotation;
+    bool isRota = false;
 
     bool attackRest = false;
     private float restTime = 3f;
@@ -38,48 +44,48 @@ public class BOTController : MonoBehaviour
 
     void Update()
     {
-        Debug.Log(stateManager.ActionState);
         //false
         if (!sencer.CheckLayer())
         {
             StopAndCreate();
-
-            Quaternion targetRotation = Quaternion.Euler(0, transform.eulerAngles.y + 180f, 0);
-
-            // Slerp‚ÅŠŠ‚ç‚©‚É‰ñ“]
-            rb.rotation = Quaternion.Slerp(rb.rotation, targetRotation, 5 * Time.deltaTime);
-
-            // ‚Ù‚Ú–Ú•WŒü‚«‚É‚È‚Á‚½‚ç’âŽ~
-            if (Quaternion.Angle(rb.rotation, targetRotation) < 0.5f)
+            if (!isRota)
             {
-                rb.rotation = targetRotation;
+                targetRotation = Quaternion.Euler(0, transform.eulerAngles.y + 180f, 0);
+                isRota = true;
             }
+
+            Rota();
             return;
         }
         Serch();
 
         if (!attackRest && near != null && minDist < 10f)
         {
-            target = near;
+            playerTarget = near;
+        }
 
+        if (pointTarget == null)
+        {
+            CreatePoint();
+        }
+        if(playerTarget != null)
+        {
             Attack();
         }
 
-        if (target == null)
-        {
-            CreatePoint();
-            return;
-        }
+        MoveToPoint();
 
-        MoVeToPoint();
-
-        float dist = Vector3.Distance(transform.position, target.transform.position);
-        if (target.name == "CheckPoint" && dist < 1f)
+        if(pointTarget != null)
         {
-            Destroy(target);
-            CreatePoint();
+            float dist = Vector3.Distance(transform.position, pointTarget.transform.position);
+            if (dist < 1f)
+            {
+                Destroy(pointTarget);
+                CreatePoint();
+            }
         }
-        if(!attackRest && target == near && stateManager.ActionState == ActionState.None)
+      
+        if(!attackRest && playerTarget != null && stateManager.ActionState == ActionState.Attack)
         {
             StartCoroutine(RestTime());
         }
@@ -89,8 +95,22 @@ public class BOTController : MonoBehaviour
         }
     }
 
-    void MoVeToPoint()
+    void MoveToPoint()
     {
+        GameObject target = null;
+
+        if(playerTarget != null)
+        {
+            target = playerTarget;
+            Destroy(pointTarget);
+        }
+        else if(pointTarget != null)
+        {
+            target = pointTarget;
+        }
+
+        if (target == null) return;
+
         Vector3 dir = target.transform.position - transform.position;
         Vector2 moveInput = new Vector2(dir.normalized.x, dir.normalized.z);
 
@@ -103,54 +123,40 @@ public class BOTController : MonoBehaviour
         Vector2 random = Random.insideUnitCircle * 10f;
         Vector3 pointPos = new Vector3(pos.x + random.x, pos.y, pos.z + random.y);
 
-        target = new GameObject("CheckPoint");
-        target.transform.position = pointPos;
+        GameObject p = Instantiate(point, pointPos, Quaternion.identity);
+
+        pointTarget = p;
     }
     
     void StopAndCreate()
     {
         OnMove(Vector2.zero);
 
-        if(target != null)
+        if(pointTarget != null)
         {
-            Destroy(target);
+            Destroy(pointTarget);
         }
         CreatePoint();
     }
 
-  /*  void PrepareAttack()
+    void Rota()
     {
-        if (target == null) return;
+        // Slerp‚ÅŠŠ‚ç‚©‚É‰ñ“]
+        rb.rotation = Quaternion.Slerp(rb.rotation, targetRotation, 5 * Time.deltaTime);
 
-        // “G‚Ì•ûŒü‚ðŒü‚­
-        Vector3 dir = target.transform.position - transform.position;
-        dir.y = 0;
-        transform.forward = dir.normalized;
-
-        // ˆÚ“®’âŽ~
-        OnMove(Vector2.zero);
-
-        if (!preparingAttack)
+        // ‚Ù‚Ú–Ú•WŒü‚«‚É‚È‚Á‚½‚ç’âŽ~
+        if (Quaternion.Angle(rb.rotation, targetRotation) < 0.5f)
         {
-            preparingAttack = true;
-            prepareCounter = attackPrepareTime;
+            rb.rotation = targetRotation;
+            isRota = false;
         }
-
-        // —­‚ßŽžŠÔ
-        if (prepareCounter <= 0f)
-        {
-            prepareCounter -= Time.deltaTime;
-        }
-
-        // —­‚ßI‚í‚Á‚½‚çƒ`ƒƒ[ƒWUŒ‚ŠJŽn
-        //atack.BOTAttack(target.transform.position);
-    }*/
+    }
 
     void Attack()
     {
-        if (target == null) return;
+        if (playerTarget == null) return;
 
-        Vector3 dir = target.transform.position - transform.position;
+        Vector3 dir = playerTarget.transform.position - transform.position;
         dir.y = 0;
         transform.forward = dir.normalized;
         float dist = dir.magnitude;
@@ -215,7 +221,7 @@ public class BOTController : MonoBehaviour
     {
         attackRest = true;
 
-        target = null;
+        playerTarget = null;
         CreatePoint();
         yield return new WaitForSeconds(restTime);
 

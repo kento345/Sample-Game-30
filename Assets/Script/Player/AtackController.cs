@@ -14,6 +14,7 @@ public class AtackController : MonoBehaviour
     private float cooldown = 1.0f; //攻撃クールダウン
     private bool lisCooldown = false;
 
+    [HideInInspector] public float chargeMax = 5.0f; //チャージ上限
     private float t = 0f;
     private bool isMax = false;
 
@@ -51,10 +52,18 @@ public class AtackController : MonoBehaviour
     {
         if (stateManager.ActionState == ActionState.Charge)
         {
-            if (t > 1)
+            if (t < chargeMax)
+            {
+                t += Time.deltaTime;
+            }
+            if(t >= chargeMax)
             {
                 isMax = true;
             }
+        }
+        else
+        {
+            t = 0f;
         }
         if (isRigid)
         {
@@ -69,26 +78,6 @@ public class AtackController : MonoBehaviour
             }
         }
     }
-/*    public void BOTAttack(Vector3 targetPos,int i)
-    {
-        if (stateManager.ActionState != ActionState.None && lisCooldown) return;
-        Vector3 dir = targetPos - transform.position;
-        dir.y = 0;
-
-        transform.forward = dir.normalized;
-         
-        float dist = dir.magnitude;
-
-        if (stateManager.ActionState == ActionState.None)
-        {
-            Shot(i);
-        }
-
-        if (stateManager.ActionState == ActionState.Charge && dist <= 5f)
-        {
-            Shot(i);
-        }
-    }*/
 
     public void Shot(int x)
     {
@@ -164,7 +153,7 @@ public class AtackController : MonoBehaviour
                 {
                     if (hit.collider == other)
                     {
-                        Debug.Log("Hit");
+                        //Debug.Log("Hit");
                         if (stateManager.ActionState == ActionState.Attack)
                         {
                             Reception p = other.gameObject.GetComponent<Reception>();
