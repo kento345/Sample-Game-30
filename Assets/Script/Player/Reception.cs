@@ -1,4 +1,5 @@
 using System.Collections;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 public class Reception : MonoBehaviour
@@ -9,16 +10,17 @@ public class Reception : MonoBehaviour
 
     private Vector3 knockbackDir;
 
-    Collider col;
 
     [SerializeField] private float StunInvincibleTime = 1.0f; //無敵時間
     bool isKonckback = false;
     private bool isHit = false;
+    Collider col;
     Rigidbody rb;
     //Animator animator;
 
     //-----Script参照-----
     private PlayerStateManager stateManager;
+    private ChargeSpike cs;
 
     private void Start()
     {
@@ -26,6 +28,7 @@ public class Reception : MonoBehaviour
         //animator = GetComponent<Animator>();
         col = GetComponent<Collider>();
         stateManager = GetComponent<PlayerStateManager>();
+        cs = GetComponent<ChargeSpike>();
     }
 
     private void Update()
@@ -36,7 +39,7 @@ public class Reception : MonoBehaviour
             if (knockbackCounter <= 0)
             {
                 isKonckback = false;
-                stateManager.SetStart(State.None);
+                stateManager.SetState(State.None);
                 rb.linearVelocity = Vector3.zero;
             }
         }
@@ -54,7 +57,7 @@ public class Reception : MonoBehaviour
         if (isHit) return;
 
         isKonckback = true;
-        stateManager.SetStart(State.Knockback);
+        stateManager.SetState(State.Knockback);
         knockbackCounter = knockbackTime;
         Debug.Log("ノックバック");
         knockbackDir = pos.normalized * force;
@@ -65,8 +68,6 @@ public class Reception : MonoBehaviour
     IEnumerator Hit()
     {
         isHit = true;
-        stateManager.SetStart(State.Hit);
-
         yield return new WaitForSeconds(0.05f);
         col.enabled = false;
         rb.useGravity = false;

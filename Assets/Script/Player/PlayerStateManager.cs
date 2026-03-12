@@ -11,7 +11,7 @@ public enum ActionState
 }
 public enum State
 {
-    None,Knockback,Hit
+    None,Knockback
 }
 //ステート管理クラス
 public class PlayerStateManager : MonoBehaviour
@@ -31,7 +31,7 @@ public class PlayerStateManager : MonoBehaviour
         //ステートの変更
         ActionState = state;
     }
-    public void SetStart(State state)
+    public void SetState(State state)
     {
         State = state;
     }

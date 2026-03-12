@@ -61,6 +61,12 @@ public class AtackController : MonoBehaviour
                 isMax = true;
             }
         }
+        if(stateManager.State == State.Knockback)
+        {
+            t = 0f;
+            CancelInvoke("EndAttack");
+            EndAttack();
+        }
         else
         {
             t = 0f;
