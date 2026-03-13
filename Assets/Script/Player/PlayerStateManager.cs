@@ -15,7 +15,7 @@ public enum AttackPower
 }
 public enum State
 {
-    None,Knockback
+    None,Knockback,Hit
 }
 //ステート管理クラス
 public class PlayerStateManager : MonoBehaviour
@@ -45,8 +45,8 @@ public class PlayerStateManager : MonoBehaviour
         State = state;
     }
 
-    /* private void Update()
-     {
-         Debug.Log($"MoveState: {MoveState}, ActionState: {ActionState}");
-     }*/
+/*    private void Update()
+    {
+        Debug.Log($"MoveState: {MoveState}, ActionState: {ActionState}");
+    }*/
 }

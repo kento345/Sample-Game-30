@@ -57,7 +57,7 @@ public class Reception : MonoBehaviour
         if (isHit) return;
 
         isKonckback = true;
-        stateManager.SetState(State.Knockback);
+        stateManager.SetState(State.Hit);
         knockbackCounter = knockbackTime;
         Debug.Log("ノックバック");
         knockbackDir = pos.normalized * force;
@@ -68,6 +68,7 @@ public class Reception : MonoBehaviour
     IEnumerator Hit()
     {
         isHit = true;
+        stateManager.SetState(State.Knockback);
         yield return new WaitForSeconds(0.05f);
         col.enabled = false;
         rb.useGravity = false;
