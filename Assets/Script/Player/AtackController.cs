@@ -55,10 +55,12 @@ public class AtackController : MonoBehaviour
             if (t < chargeMax)
             {
                 t += Time.deltaTime;
+                //stateManager.SetAttackPower(AttackPower.Weak);
             }
             if(t >= chargeMax)
             {
                 isMax = true;
+                //stateManager.SetAttackPower(AttackPower.Strong);
             }
         }
         if(stateManager.State == State.Knockback)
@@ -70,6 +72,7 @@ public class AtackController : MonoBehaviour
         else
         {
             t = 0f;
+            //stateManager.SetAttackPower(AttackPower.None);
         }
         if (isRigid)
         {
@@ -130,6 +133,7 @@ public class AtackController : MonoBehaviour
         }
     
         isMax = false;
+        //stateManager.SetAttackPower(AttackPower.None);
         t = 0f;
 
         StartCoroutine(CooldownCount());

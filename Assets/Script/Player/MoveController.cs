@@ -52,7 +52,7 @@ public class MoveController : MonoBehaviour
     public void Move()
     {
         if (ac.isRigid) { return; }
-        if(stateManager.State != State.None) { return; }
+        if(stateManager.State == State.Knockback) { return; }
 
         curentSpeed = Speed;
         curentRotSpeed = rotSpeed;
