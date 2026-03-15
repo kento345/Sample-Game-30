@@ -16,7 +16,6 @@ public class Reception : MonoBehaviour
     private bool isHit = false;
     Collider col;
     Rigidbody rb;
-    //Animator animator;
 
     //-----Script参照-----
     private PlayerStateManager stateManager;
@@ -25,7 +24,6 @@ public class Reception : MonoBehaviour
     private void Start()
     {
         rb = GetComponent<Rigidbody>();
-        //animator = GetComponent<Animator>();
         col = GetComponent<Collider>();
         stateManager = GetComponent<PlayerStateManager>();
         cs = GetComponent<ChargeSpike>();
@@ -57,7 +55,7 @@ public class Reception : MonoBehaviour
         if (isHit) return;
 
         isKonckback = true;
-        stateManager.SetState(State.Hit);
+        //stateManager.SetState(State.Hit);
         knockbackCounter = knockbackTime;
         Debug.Log("ノックバック");
         knockbackDir = pos.normalized * force;

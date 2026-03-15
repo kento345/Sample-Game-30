@@ -6,9 +6,14 @@ public class PlayerItemEffect : MonoBehaviour
 {
     Vector3 defaultScale;
 
+
+    AtackController ac;
+
     private void Start()
     {
         defaultScale = transform.localScale;
+
+        ac = GetComponent<AtackController>();
     }
 
     public void ApplyItem(Item item)
@@ -44,8 +49,10 @@ public class PlayerItemEffect : MonoBehaviour
     IEnumerator BigEfect(Item item)
     {
         transform.localScale = defaultScale * item.effectValue;
+        ac.curentknockbackForce *= item.effectValue;
         yield return new WaitForSeconds(item.duration);
         transform.localScale = defaultScale;
+        ac.curentknockbackForce *= 1;
     }
 
     IEnumerator SmallEfect(Item item)
