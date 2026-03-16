@@ -26,7 +26,7 @@ public class AtackController : MonoBehaviour
     [Header("ノックバック,無敵設定")]
     [SerializeField] private float WeakKnockbackForce = 15.0f; //弱ノックバック
     [SerializeField] private float StrongKnockbackForce = 30.0f;//強ノックバック
-    [HideInInspector] public float curentknockbackForce = 0f;//現在のノックバック力
+    public float curentknockbackForce = 0f;//現在のノックバック力
 
     [Header("当たり判定設定")]
     [SerializeField] private SphereCollider searchArea;

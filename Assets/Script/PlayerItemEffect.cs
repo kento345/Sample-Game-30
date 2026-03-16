@@ -5,15 +5,17 @@ using UnityEngine;
 public class PlayerItemEffect : MonoBehaviour
 {
     Vector3 defaultScale;
+    float defaultKnockbackForce;
 
 
     AtackController ac;
 
     private void Start()
     {
-        defaultScale = transform.localScale;
-
         ac = GetComponent<AtackController>();
+
+        defaultScale = transform.localScale;
+        defaultKnockbackForce = ac.curentknockbackForce;
     }
 
     public void ApplyItem(Item item)
@@ -49,10 +51,12 @@ public class PlayerItemEffect : MonoBehaviour
     IEnumerator BigEfect(Item item)
     {
         transform.localScale = defaultScale * item.effectValue;
-        ac.curentknockbackForce *= item.effectValue;
+        ac.curentknockbackForce = defaultKnockbackForce * item.effectValue;
+        
         yield return new WaitForSeconds(item.duration);
+
         transform.localScale = defaultScale;
-        ac.curentknockbackForce *= 1;
+        ac.curentknockbackForce = defaultKnockbackForce;
     }
 
     IEnumerator SmallEfect(Item item)

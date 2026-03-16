@@ -25,7 +25,7 @@ public class Reception : MonoBehaviour
     {
         rb = GetComponent<Rigidbody>();
         col = GetComponent<Collider>();
-        stateManager = GetComponent<PlayerStateManager>();
+        //stateManager = GetComponent<PlayerStateManager>();
         cs = GetComponent<ChargeSpike>();
     }
 
@@ -37,7 +37,7 @@ public class Reception : MonoBehaviour
             if (knockbackCounter <= 0)
             {
                 isKonckback = false;
-                stateManager.SetState(State.None);
+                //stateManager.SetState(State.None);
                 rb.linearVelocity = Vector3.zero;
             }
         }
@@ -66,7 +66,7 @@ public class Reception : MonoBehaviour
     IEnumerator Hit()
     {
         isHit = true;
-        stateManager.SetState(State.Knockback);
+        //stateManager.SetState(State.Knockback);
         yield return new WaitForSeconds(0.05f);
         col.enabled = false;
         rb.useGravity = false;
