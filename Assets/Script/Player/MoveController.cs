@@ -5,7 +5,7 @@ using UnityEngine;
 public class MoveController : MonoBehaviour
 {
     [Header("ˆÚ“®İ’è")]
-    [SerializeField] private float Speed = 5.0f;
+    public float Speed = 5.0f;
     private float Speed2 = 0f;
     [SerializeField] private float chargingmoveSpeedRate = 0.3f;
     private float curentSpeed = 0f;

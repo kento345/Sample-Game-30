@@ -1,21 +1,39 @@
+using JetBrains.Annotations;
 using System.Collections;
 using System.Xml.Serialization;
 using UnityEngine;
+using UnityEngine.Rendering.Universal;
 
 public class PlayerItemEffect : MonoBehaviour
 {
-    Vector3 defaultScale;
-    float defaultKnockbackForce;
+    [SerializeField] private DecalProjector circle;
+    [SerializeField] private DecalProjector arraw;
 
+    Vector3 defaultScale;
+    float defaultSpeed;
+    float defaultWeakKnockbackForce;
+    float defaultStrongKnockbackForce;
+    Vector3 defaltCircleSize;
+    Vector3 defaltArrawSize;
+    Vector3 circleSize;
+    Vector3 arrawSize;
+    
+    public bool isEffectActive {get; private set;} = false;
 
     AtackController ac;
+    MoveController mc;
 
     private void Start()
     {
         ac = GetComponent<AtackController>();
+        mc = GetComponent<MoveController>();
 
         defaultScale = transform.localScale;
-        defaultKnockbackForce = ac.curentknockbackForce;
+        defaultWeakKnockbackForce = ac.WeakKnockbackForce;
+        defaultSpeed = mc.Speed;
+        defaultStrongKnockbackForce = ac.StrongKnockbackForce;
+        defaltCircleSize = circle.size;
+        defaltArrawSize = arraw.size;
     }
 
     public void ApplyItem(Item item)
@@ -51,18 +69,64 @@ public class PlayerItemEffect : MonoBehaviour
     IEnumerator BigEfect(Item item)
     {
         transform.localScale = defaultScale * item.effectValue;
-        ac.curentknockbackForce = defaultKnockbackForce * item.effectValue;
-        
+        DecalScale(0,item);
+        isEffectActive = true;
         yield return new WaitForSeconds(item.duration);
-
         transform.localScale = defaultScale;
-        ac.curentknockbackForce = defaultKnockbackForce;
+        DecalScale(1, item);
+        isEffectActive = false;
     }
 
     IEnumerator SmallEfect(Item item)
     {
         transform.localScale = defaultScale / item.effectValue;
+        DecalScale(2, item);
+        mc.Speed = defaultSpeed * item.effectValue;
+        isEffectActive = true;
         yield return new WaitForSeconds(item.duration);
+        transform.position += new Vector3(0,1,0);
         transform.localScale = defaultScale;
+        DecalScale(1, item);
+        mc.Speed = defaultSpeed;
+        isEffectActive = false;
+    }
+
+    void DecalScale(int i,Item item)
+    { 
+        if (i == 0)
+        {
+            //デカール拡大;
+            circleSize = defaltCircleSize * item.effectValue;
+            circleSize.z = defaltCircleSize.z;
+            circle.size = circleSize;
+            arrawSize = defaltArrawSize * item.effectValue;
+            arrawSize.z = defaltArrawSize.z;
+            arraw.size = arrawSize;
+            //攻撃力アップ
+            ac.WeakKnockbackForce = defaultWeakKnockbackForce * item.effectValue;
+            ac.StrongKnockbackForce = defaultStrongKnockbackForce * item.effectValue;
+        }
+        else if (i == 1)
+        {
+            //デカールノーマル
+            circle.size = defaltCircleSize;
+            arraw.size  = defaltArrawSize;
+            //攻撃力ノーマル
+            ac.WeakKnockbackForce = defaultWeakKnockbackForce;
+            ac.StrongKnockbackForce = defaultStrongKnockbackForce;
+        }
+        else
+        {
+            //デカール縮小
+            circleSize = defaltCircleSize / item.effectValue;
+            circleSize.z = defaltCircleSize.z;
+            circle.size = circleSize;
+            arrawSize = defaltArrawSize / item.effectValue;
+            arrawSize.z = defaltArrawSize.z;
+            arraw.size = arrawSize;
+            //攻撃力ダウン
+            ac.WeakKnockbackForce = defaultWeakKnockbackForce / item.effectValue;
+            ac.StrongKnockbackForce = defaultStrongKnockbackForce / item.effectValue;
+        }
     }
 }
