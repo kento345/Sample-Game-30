@@ -163,7 +163,7 @@ public class AtackController : MonoBehaviour
                 {
                     if (hit.collider == other)
                     {
-                        //Debug.Log("Hit");
+                        Debug.Log("Hit");
                         if (stateManager.ActionState == ActionState.Attack)
                         {
                             Reception p = other.gameObject.GetComponent<Reception>();
