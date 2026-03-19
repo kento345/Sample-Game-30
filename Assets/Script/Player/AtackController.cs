@@ -86,6 +86,7 @@ public class AtackController : MonoBehaviour
                 curentRecoveryTime = StrongRecoveryTime;
             }
         }
+        Debug.Log(stateManager.ActionState);
     }
 
     public void Shot(int x)
@@ -148,6 +149,9 @@ public class AtackController : MonoBehaviour
 
     private void OnTriggerStay(Collider other)
     {
+        if (stateManager == null || rb == null) return;
+
+        if (stateManager.ActionState != ActionState.Attack) return;
         if (other.gameObject.CompareTag("Player"))
         {
             Vector3 posDir = other.transform.position - this.transform.position;
@@ -163,11 +167,11 @@ public class AtackController : MonoBehaviour
                 {
                     if (hit.collider == other)
                     {
-                        Debug.Log("Hit");
                         if (stateManager.ActionState == ActionState.Attack)
                         {
+                            Debug.Log(other.gameObject.name + "に攻撃が当たった");
                             Reception p = other.gameObject.GetComponent<Reception>();
-                            //if (p.isHit) { return; }
+                            if (p == null || rb == null) { return; }
                             p.KnockBack(rb.linearVelocity.normalized, curentknockbackForce);
                             //当たった時点でInvokeをキャンセルしてタックルを止める
                             CancelInvoke("EndAttack");
