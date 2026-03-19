@@ -32,6 +32,8 @@ public class AtackController : MonoBehaviour
     [SerializeField] private SphereCollider searchArea;
     [SerializeField] private float angle = 45f;
 
+    bool hasHit = false;
+
     Rigidbody rb;
     PlayerStateManager stateManager;
    
@@ -86,7 +88,7 @@ public class AtackController : MonoBehaviour
                 curentRecoveryTime = StrongRecoveryTime;
             }
         }
-        Debug.Log(stateManager.ActionState);
+        //Debug.Log(stateManager.ActionState);
     }
 
     public void Shot(int x)
@@ -127,6 +129,8 @@ public class AtackController : MonoBehaviour
         //ÉXÉeÅ[ÉgÇNoneÇ…
         stateManager.SetActionState(ActionState.None);
 
+        hasHit = false;
+
         if (isMax)
         {
             Debug .Log("ã≠çUåÇ");
@@ -149,6 +153,7 @@ public class AtackController : MonoBehaviour
 
     private void OnTriggerStay(Collider other)
     {
+        if(hasHit) { return; }
         if (stateManager == null || rb == null) return;
 
         if (stateManager.ActionState != ActionState.Attack) return;
@@ -167,8 +172,10 @@ public class AtackController : MonoBehaviour
                 {
                     if (hit.collider == other)
                     {
+                        Debug.Log("çUåÇîÕàÕì‡");
                         if (stateManager.ActionState == ActionState.Attack)
                         {
+                            hasHit = true;
                             Debug.Log(other.gameObject.name + "Ç…çUåÇÇ™ìñÇΩÇ¡ÇΩ");
                             Reception p = other.gameObject.GetComponent<Reception>();
                             if (p == null || rb == null) { return; }
@@ -181,6 +188,7 @@ public class AtackController : MonoBehaviour
                 }
             }
         }
+      
     }
 
 #if UNITY_EDITOR
