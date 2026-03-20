@@ -10,6 +10,8 @@ public class Reception : MonoBehaviour
 
     private Vector3 knockbackDir;
 
+    public float smallKnockback = 1;
+
 
     [SerializeField] private float StunInvincibleTime = 1.0f; //無敵時間
     bool isKonckback = false;
@@ -58,7 +60,7 @@ public class Reception : MonoBehaviour
         //stateManager.SetState(State.Hit);
         knockbackCounter = knockbackTime;
         Debug.Log("ノックバック");
-        knockbackDir = pos.normalized * force;
+        knockbackDir = pos.normalized * force * smallKnockback;
         rb.linearVelocity = Vector3.zero;
         StartCoroutine(Hit());
     }

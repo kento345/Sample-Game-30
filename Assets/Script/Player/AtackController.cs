@@ -165,27 +165,19 @@ public class AtackController : MonoBehaviour
             var dist = Vector3.Distance(other.transform.position, transform.position);
 
             if (target_angle > angle) { return; }
-
-            if (target_angle <= angle)
+            float radius = searchArea.radius * transform.lossyScale.x;
+            if (target_angle <= angle &&
+                Vector3.Distance(transform.position, other.transform.position) <= radius)
             {
-                if (Physics.Raycast(this.transform.position + Vector3.up * 0.5f, posDir, out RaycastHit hit))
-                {
-                    if (hit.collider == other)
-                    {
-                        Debug.Log("攻撃範囲内");
-                        if (stateManager.ActionState == ActionState.Attack)
-                        {
-                            hasHit = true;
-                            Debug.Log(other.gameObject.name + "に攻撃が当たった");
-                            Reception p = other.gameObject.GetComponent<Reception>();
-                            if (p == null || rb == null) { return; }
-                            p.KnockBack(rb.linearVelocity.normalized, curentknockbackForce);
-                            //当たった時点でInvokeをキャンセルしてタックルを止める
-                            CancelInvoke("EndAttack");
-                            EndAttack();
-                        }
-                    }
-                }
+                hasHit = true;
+
+                Reception p = other.GetComponent<Reception>();
+                if (p == null) return;
+
+                p.KnockBack(rb.linearVelocity.normalized, curentknockbackForce);
+
+                CancelInvoke("EndAttack");
+                EndAttack();
             }
         }
       

@@ -22,11 +22,13 @@ public class PlayerItemEffect : MonoBehaviour
 
     AtackController ac;
     MoveController mc;
+    Reception reception;
 
     private void Start()
     {
         ac = GetComponent<AtackController>();
         mc = GetComponent<MoveController>();
+        reception = GetComponent<Reception>();
 
         defaultScale = transform.localScale;
         defaultWeakKnockbackForce = ac.WeakKnockbackForce;
@@ -82,12 +84,14 @@ public class PlayerItemEffect : MonoBehaviour
         transform.localScale = defaultScale / item.effectValue;
         DecalScale(2, item);
         mc.Speed = defaultSpeed * item.effectValue;
+        reception.smallKnockback = 20;
         isEffectActive = true;
         yield return new WaitForSeconds(item.duration);
         transform.position += new Vector3(0,1,0);
         transform.localScale = defaultScale;
         DecalScale(1, item);
         mc.Speed = defaultSpeed;
+        reception.smallKnockback = 1;
         isEffectActive = false;
     }
 
