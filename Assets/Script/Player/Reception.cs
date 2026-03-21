@@ -10,8 +10,7 @@ public class Reception : MonoBehaviour
 
     private Vector3 knockbackDir;
 
-    public float smallKnockback = 1;
-
+    [HideInInspector] public float smallKnockback = 1;
 
     [SerializeField] private float StunInvincibleTime = 1.0f; //–³“GŽžŠÔ
     bool isKonckback = false;
