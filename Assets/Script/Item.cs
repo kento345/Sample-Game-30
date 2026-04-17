@@ -12,12 +12,14 @@ public class Item : ScriptableObject
         RandomBox,
         BigBox,
         SmallBox,
+        ReverseBox,
+        PaintBox,
     }
 
     public Type type;      //効果内容
-    public Sprite icon;    //持続中の表示アイコン（仮）
+    //public Sprite icon;    //持続中の表示アイコン（仮）
     public String itemName;//名前
-    public GameObject Obj; //オブジェクトの見た目
+    //public GameObject Obj; //オブジェクトの見た目
     public float duration; //持続時間
     public int effectValue;//効果値
 

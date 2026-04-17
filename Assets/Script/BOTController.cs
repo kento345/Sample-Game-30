@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.InputSystem.Users;
 using UnityEngine.Rendering;
 using UnityEngine.UIElements;
 
@@ -11,6 +12,9 @@ public class BOTController : MonoBehaviour
     GameObject near = null;
     float minDist;
 
+    //PlayerëÄçÏîΩì]
+    public int playerID;
+    private bool isInverted = false;
 
     private float attackPrepareTime = 1f;
     bool preparingAttack = false;
@@ -114,6 +118,12 @@ public class BOTController : MonoBehaviour
         Vector3 dir = target.transform.position - transform.position;
         Vector2 moveInput = new Vector2(dir.normalized.x, dir.normalized.z);
 
+        if (isInverted)
+        {
+            //ëÄçÏîΩì]
+            moveInput *= -1;
+        }
+
         OnMove(moveInput);
     }
 
@@ -211,10 +221,14 @@ public class BOTController : MonoBehaviour
         }
     }
 
-    void OnMove(Vector2 context)
+    public void OnMove(Vector2 context)
     {
         stateManager.UpdateMoveState(context);
         move.SetMoveInput(context);
+    }
+    public void SetReverse(bool value)
+    {
+        isInverted = value;
     }
 
     IEnumerator RestTime()

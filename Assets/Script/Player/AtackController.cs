@@ -52,7 +52,7 @@ public class AtackController : MonoBehaviour
 
     void Update()
     {
-        if (stateManager.ActionState == ActionState.Charge)
+        if (stateManager.ActionState == ActionState.Charge && stateManager.State != State.Knockback)
         {
             if (t < chargeMax)
             {
@@ -67,7 +67,7 @@ public class AtackController : MonoBehaviour
         }
         if(stateManager.State == State.Knockback)
         {
-            t = 0f;
+            SetCharge(0);
             CancelInvoke("EndAttack");
             EndAttack();
         }

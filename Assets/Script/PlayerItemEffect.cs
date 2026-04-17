@@ -43,10 +43,10 @@ public class PlayerItemEffect : MonoBehaviour
         switch (item.type)
         {
             case Item.Type.RandomBox:
-                RandomEfect(item);
+                //RandomEfect(item);
                 break;
-            case Item.Type.SmallBox:
-                StartCoroutine(SmallEfect(item));
+            case Item.Type.ReverseBox:
+                StartCoroutine(ReverseEfect(item));
                 break;
             case Item.Type.BigBox:
                 StartCoroutine(BigEfect(item));
@@ -54,7 +54,7 @@ public class PlayerItemEffect : MonoBehaviour
         }
     }
 
-    void RandomEfect(Item item)
+   /* void RandomEfect(Item item)
     {
         int r = Random.Range(0, 2);
 
@@ -67,7 +67,7 @@ public class PlayerItemEffect : MonoBehaviour
             StartCoroutine(SmallEfect(item));
 
         }
-    }
+    }*/
     IEnumerator BigEfect(Item item)
     {
         transform.localScale = defaultScale * item.effectValue;
@@ -79,7 +79,7 @@ public class PlayerItemEffect : MonoBehaviour
         isEffectActive = false;
     }
 
-    IEnumerator SmallEfect(Item item)
+    /*IEnumerator SmallEfect(Item item)
     {
         transform.localScale = defaultScale / item.effectValue;
         DecalScale(2, item);
@@ -92,6 +92,49 @@ public class PlayerItemEffect : MonoBehaviour
         DecalScale(1, item);
         mc.Speed = defaultSpeed;
         reception.smallKnockback = 1;
+        isEffectActive = false;
+    }*/
+
+    IEnumerator ReverseEfect(Item item)
+    {
+        isEffectActive = true;
+
+        PlayerItemEffect[] players = FindObjectsByType<PlayerItemEffect>(FindObjectsSortMode.None);
+
+        foreach (var p in players)
+        {
+            if (p == this) continue;
+
+            var playerInput = p.GetComponent<PlayerInputController>();
+            if (playerInput != null)
+            {
+                playerInput.SetReverse(true);
+            }
+
+            var bot = p.GetComponent<BOTController>();
+            if (bot != null)
+            {
+                bot.SetReverse(true);
+            }
+        }
+        yield return new WaitForSeconds(item.duration);
+
+        foreach (var p in players)
+        {
+            if (p == this) continue;
+
+            var playerInput = p.GetComponent<PlayerInputController>();
+            if (playerInput != null)
+            {
+                playerInput.SetReverse(false);
+            }
+
+            var bot = p.GetComponent<BOTController>();
+            if (bot != null)
+            {
+                bot.SetReverse(false);
+            }
+        }
         isEffectActive = false;
     }
 

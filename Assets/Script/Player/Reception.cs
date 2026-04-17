@@ -22,12 +22,19 @@ public class Reception : MonoBehaviour
     private PlayerStateManager stateManager;
     private ChargeSpike cs;
 
+    private AtackController ac;
+    private PlayerInputController playerCon;
+    private BOTController botCon;
+
     private void Start()
     {
         rb = GetComponent<Rigidbody>();
         col = GetComponent<Collider>();
-        //stateManager = GetComponent<PlayerStateManager>();
-        cs = GetComponent<ChargeSpike>();
+        stateManager = GetComponent<PlayerStateManager>();
+        cs = GetComponent<ChargeSpike>();;
+        ac = GetComponent<AtackController>();
+        playerCon = GetComponent<PlayerInputController>();
+        botCon = GetComponent<BOTController>();
     }
 
     private void Update()
@@ -56,11 +63,28 @@ public class Reception : MonoBehaviour
         if (isHit) return;
 
         isKonckback = true;
+        if (ac != null)
+        {
+            ac.SetCharge(0);
+        }
+        if (stateManager != null)
+        {
+            stateManager.SetActionState(ActionState.None);
+        }
         //stateManager.SetState(State.Hit);
         knockbackCounter = knockbackTime;
         Debug.Log("ノックバック");
         knockbackDir = pos.normalized * force * smallKnockback;
         rb.linearVelocity = Vector3.zero;
+
+        if (botCon != null)
+        {
+            botCon.OnMove(Vector2.zero);
+        }
+        if (playerCon != null)
+        {
+            playerCon.DontMove(true);
+        }
         StartCoroutine(Hit());
     }
 
@@ -76,5 +100,9 @@ public class Reception : MonoBehaviour
         rb.useGravity = true;
         col.enabled = true;
         isHit = false;
+        if (playerCon != null)
+        {
+            playerCon.DontMove(false);
+        }
     }
 }
