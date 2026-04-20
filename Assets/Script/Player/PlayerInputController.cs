@@ -3,10 +3,8 @@ using UnityEngine.InputSystem;
 
 public class PlayerInputController : MonoBehaviour
 {
-    private bool notMove = false;
 
     //PlayerëÄçÏîΩì]
-    public int playerID;
     private bool isInverted = false;
 
     //ScriptéÊìæ
@@ -24,7 +22,7 @@ public class PlayerInputController : MonoBehaviour
 
     public void OnMove(InputAction.CallbackContext context)
     {
-        if (notMove) {
+        if (stateManager.State == State.Knockback) {
             move.SetMoveInput(Vector2.zero);
             stateManager.UpdateMoveState(Vector2.zero);
             return; }
@@ -58,10 +56,5 @@ public class PlayerInputController : MonoBehaviour
     public void SetReverse(bool value)
     {
         isInverted = value;
-    }
-
-    public void  DontMove(bool x)
-    {
-        notMove = x;
     }
 }

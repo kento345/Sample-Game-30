@@ -48,6 +48,8 @@ public class BOTController : MonoBehaviour
 
     void Update()
     {
+        Debug.Log(stateManager.State);
+        if (stateManager.State == State.Knockback) { return; }
         //false
         if (!sencer.CheckLayer())
         {

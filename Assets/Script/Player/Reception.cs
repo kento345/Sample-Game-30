@@ -81,17 +81,17 @@ public class Reception : MonoBehaviour
         {
             botCon.OnMove(Vector2.zero);
         }
-        if (playerCon != null)
+/*        if (playerCon != null)
         {
             playerCon.DontMove(true);
-        }
+        }*/
         StartCoroutine(Hit());
     }
 
     IEnumerator Hit()
     {
         isHit = true;
-        //stateManager.SetState(State.Knockback);
+        stateManager.SetState(State.Knockback);
         yield return new WaitForSeconds(0.05f);
         col.enabled = false;
         rb.useGravity = false;
@@ -99,10 +99,7 @@ public class Reception : MonoBehaviour
 
         rb.useGravity = true;
         col.enabled = true;
+        stateManager.SetState(State.None);
         isHit = false;
-        if (playerCon != null)
-        {
-            playerCon.DontMove(false);
-        }
     }
 }

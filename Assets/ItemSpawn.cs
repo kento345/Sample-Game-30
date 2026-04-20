@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -12,7 +13,7 @@ public class ItemSpawn : MonoBehaviour
     float timer = 0f;
     float SpawnTime = 5f;
     int lastIndex = -1;
-
+    
     int maxCount = 5;
    [SerializeField] private List<GameObject> items = new List<GameObject>();
 
@@ -35,15 +36,24 @@ public class ItemSpawn : MonoBehaviour
 
     void SpawnItem()
     {
-        //アイテム生成制限
+      　//Playerの取得したアイテムのList除外
         items.RemoveAll(item => item == null);
+        //アイテム生成制限
         if (items.Count >= maxCount) { return; }
         //アイテム種類の重複防止,ランダム生成
         int i;
-        do
+        if(itemPrefabes.Length <= 1){
+            i = 0;
+        }
+        else
         {
-            i = Random.Range(0, itemPrefabes.Length);
-        }while(i == lastIndex);
+            //do { 処理 } while(条件);条件にあったらもう一度処理
+            do
+            {
+                i = Random.Range(0, itemPrefabes.Length);
+            } while (i == lastIndex);
+        }
+        
         //アイテム生成位置のランダム生成
         float x = Random.Range(posX.x, posX.y);
         float y = Random.Range(posZ.x, posZ.y);

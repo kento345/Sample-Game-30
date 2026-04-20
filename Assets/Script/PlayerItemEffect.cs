@@ -111,11 +111,11 @@ public class PlayerItemEffect : MonoBehaviour
                 playerInput.SetReverse(true);
             }
 
-            var bot = p.GetComponent<BOTController>();
+           /* var bot = p.GetComponent<BOTController>();
             if (bot != null)
             {
                 bot.SetReverse(true);
-            }
+            }*/
         }
         yield return new WaitForSeconds(item.duration);
 
@@ -129,11 +129,11 @@ public class PlayerItemEffect : MonoBehaviour
                 playerInput.SetReverse(false);
             }
 
-            var bot = p.GetComponent<BOTController>();
+          /*  var bot = p.GetComponent<BOTController>();
             if (bot != null)
             {
                 bot.SetReverse(false);
-            }
+            }*/
         }
         isEffectActive = false;
     }

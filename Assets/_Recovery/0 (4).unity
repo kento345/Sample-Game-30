@@ -165,8 +165,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemPrefabes:
   - {fileID: 8024731630112072283, guid: 6f3a539591278e0479fd80a59fbfc7ca, type: 3}
-  - {fileID: 8024731630112072283, guid: a5e228c583c623d48989a13dc702b7e0, type: 3}
-  - {fileID: 8024731630112072283, guid: e96940e6c78313a499817547a8b4e498, type: 3}
   items: []
 --- !u!1001 &380618444
 PrefabInstance:
@@ -693,10 +691,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1274908932595267343, guid: 6dd616620591a1346a8cc657d2fe3944, type: 3}
       propertyPath: smallKnockback
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1274908932595267343, guid: 6dd616620591a1346a8cc657d2fe3944, type: 3}
-      propertyPath: StunInvincibleTime
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1402033627084678745, guid: 6dd616620591a1346a8cc657d2fe3944, type: 3}
