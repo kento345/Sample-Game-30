@@ -3,6 +3,7 @@ using System.Collections;
 using System.Xml.Serialization;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
+using UnityEngine.UI;
 
 public class PlayerItemEffect : MonoBehaviour
 {
@@ -17,7 +18,8 @@ public class PlayerItemEffect : MonoBehaviour
     Vector3 defaltArrawSize;
     Vector3 circleSize;
     Vector3 arrawSize;
-    
+    Image paint;
+
     public bool isEffectActive {get; private set;} = false;
 
     AtackController ac;
@@ -36,6 +38,8 @@ public class PlayerItemEffect : MonoBehaviour
         defaultStrongKnockbackForce = ac.StrongKnockbackForce;
         defaltCircleSize = circle.size;
         defaltArrawSize = arraw.size;
+        GameObject obj = GameObject.Find("PaintImage");
+        paint = obj.GetComponent<Image>();
     }
 
     public void ApplyItem(Item item)
@@ -50,6 +54,9 @@ public class PlayerItemEffect : MonoBehaviour
                 break;
             case Item.Type.BigBox:
                 StartCoroutine(BigEfect(item));
+                break;
+            case Item.Type.PaintBox:
+                StartCoroutine(PaintEfect(item));
                 break;
         }
     }
@@ -136,6 +143,13 @@ public class PlayerItemEffect : MonoBehaviour
             }*/
         }
         isEffectActive = false;
+    }
+
+    IEnumerator PaintEfect(Item item)
+    {
+        paint.enabled = true;
+        yield return new WaitForSeconds(item.duration);
+        paint.enabled = false;
     }
 
     void DecalScale(int i,Item item)
