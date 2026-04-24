@@ -7,13 +7,13 @@ using UnityEngine.UIElements;
 public class BOTController : MonoBehaviour
 {
     [SerializeField] private GameObject point;
-    [SerializeField] GameObject pointTarget;
-    [SerializeField] GameObject playerTarget;
+    /*[SerializeField]*/ GameObject pointTarget;
+    /*[SerializeField]*/ GameObject playerTarget;
     GameObject near = null;
     float minDist;
 
     //PlayerëÄçÏîΩì]
-    public int playerID;
+    //public int playerID;
     private bool isInverted = false;
 
     private float attackPrepareTime = 1f;

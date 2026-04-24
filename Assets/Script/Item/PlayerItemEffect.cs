@@ -47,7 +47,7 @@ public class PlayerItemEffect : MonoBehaviour
         switch (item.type)
         {
             case Item.Type.RandomBox:
-                //RandomEfect(item);
+                RandomEfect(item);
                 break;
             case Item.Type.ReverseBox:
                 StartCoroutine(ReverseEfect(item));
@@ -61,7 +61,7 @@ public class PlayerItemEffect : MonoBehaviour
         }
     }
 
-   /* void RandomEfect(Item item)
+    void RandomEfect(Item item)
     {
         int r = Random.Range(0, 2);
 
@@ -69,12 +69,15 @@ public class PlayerItemEffect : MonoBehaviour
         {
             StartCoroutine(BigEfect(item));
         }
-        else
+        else if (r == 1)
         {
-            StartCoroutine(SmallEfect(item));
-
+            StartCoroutine(ReverseEfect(item));
         }
-    }*/
+        else if (r == 2)
+        {
+            StartCoroutine(PaintEfect(item));
+        }
+    }
     IEnumerator BigEfect(Item item)
     {
         transform.localScale = defaultScale * item.effectValue;
